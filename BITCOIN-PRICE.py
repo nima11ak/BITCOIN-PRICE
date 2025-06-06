@@ -3,15 +3,13 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 
-#
+#دریافت قیمت بیتکوین در 30 روز گذشته
 
 url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30&interval=daily"
-#
-params = {"vs_currency":" usd ","days":"30"}
 
+response = requests.get(url)
 
-response = requests.get(url, params = params)
-
+#اگر وضعیت پاسخ 200 باشه یعنی موفق بوده
 if response.status_code == 200:
     data = response.json()
 
@@ -21,14 +19,14 @@ if response.status_code == 200:
     if "prices" in data:
         prices_data = data["prices"]
 
-        #
+        #گرقتن زمان و تاریخ
         timestamps = [point[0] for point in prices_data]
         prices = [point[1] for point in prices_data]
 
         # تبدیل timestamp به تاریخ قابله فهم
         dates = [datetime.fromtimestamp(ts / 1000).strftime("%m-%d") for ts in timestamps]
 
-        #
+        #رسم نمودار بیتکوین
         plt.figure(figsize=(10 , 5))
         plt.plot(dates, prices, label= " BITCOIN PRICE", color="orange")
         plt.xticks(rotation=45)
